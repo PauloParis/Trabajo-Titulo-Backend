@@ -2,27 +2,62 @@ import sequelize from "../database/connectdb.js";
 import tableros from "../models/Board.js";
 import ciclos from "../models/Cycle.js";
 import indicadores from "../models/Indicator.js";
+import usuario_tablero from "../models/User.Board.js";
 import usuario_indicador from "../models/User.Indicator.js";
 
 export const createIndicator = async (req, res) => { ///SOCKET IO
     const {nombre_indicador} = req.body; 
-    let id_ciclo = req.params.id;
-    try {
+    let id_tablero = req.params.id;
 
-        let maxIndicator = await indicadores.count({
+    try {
+        // Solo se pueden crear 10 indicadores
+        let maxIndicator = await indicadores.count({ // cuento los indicadores existentes
             where: {
-                cicloIDCiclo: id_ciclo
+                TableroIDTablero: id_tablero
+            }
+        })
+        if(maxIndicator>=10) throw { code: 400} // si excede los 10 throw error
+
+
+        // creo el indicador
+        let indicator = await indicadores.create({
+            Nombre_Indicador: nombre_indicador,
+            //Felicidad_Indicador: 0,
+            tableroIDTablero: id_tablero
+        })
+
+        // busco el id del indicador recien creado
+        let indicadorCreado = await indicadores.findOne({
+            attributes: [
+                'ID_Indicador'
+            ],  
+            where: {
+                Nombre_Indicador: nombre_indicador,
+                tableroIDTablero: id_tablero
             }
         })
 
-        if(maxIndicator>=10) throw { code: 400}
-
-        let indicator = await indicadores.create({
-            Nombre_Indicador: nombre_indicador,
-            Felicidad_Indicador: 0,
-            cicloIDCiclo: id_ciclo
+        //busco usuarios relacionados al tablero
+        let usuarios_del_tablero = await usuario_tablero.findAll({
+            attributes: [
+                'usuarioIDUsuario'
+            ],
+            where: {
+                tableroIDTablero: id_tablero
+            }
         })
 
+        /* creo la tabla usuario_indicador, por cada usuario perteneciente al tablero,
+        en relación al indicador creado */
+       for(let i= 0 ; i<usuarios_del_tablero.length ; i++){
+        await usuario_indicador.create({
+            Evaluacion: null,
+            usuarioIDUsuario: usuarios_del_tablero[i].usuarioIDUsuario,
+            indicadoreIDIndicador: indicadorCreado.ID_Indicador
+        })
+       }
+
+        //return res.json({indicadorCreado})
         return res.status(200).json({indicator})
 
     } catch (error) {
@@ -34,13 +69,14 @@ export const createIndicator = async (req, res) => { ///SOCKET IO
 }
 
 export const getIndicator = async (req, res) => { ///SOCKET IO
-    let id_ciclo = req.params.id 
+    let id_tablero = req.params.id 
     try {
         let indicator = await indicadores.findAll({
             where: {
-                cicloIDCiclo: id_ciclo
+                tableroIDTablero: id_tablero
             }
-        })      
+        })   
+         
         return res.status(200).json({indicator});
         
     } catch (error) {

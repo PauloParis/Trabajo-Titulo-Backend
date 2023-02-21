@@ -67,6 +67,7 @@ io.on("connection", (socket) => {
         socket.on("message", (msg) => { 
 
             io.in(user.room).emit("ciclo", (msg))  
+            /* io.in(user.room).emit('indicador', (msg)) */
         })
 
         socket.on("editarCiclo", (edit) => {

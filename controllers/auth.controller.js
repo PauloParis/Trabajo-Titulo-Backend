@@ -10,8 +10,10 @@ import usuario_tablero from "../models/User.Board.js"
 import sequelize from "../database/connectdb.js";
 import {Op} from "sequelize";
 
+//import ciclo_indicador from "../models/Cycle.Indicator.js";
 
 
+//listo
 export const register = async (req, res) => {
     const {nombre_usuario, apellido, pais, email, password} = req.body;
     let tipo_usuario = 'Estandar'
@@ -50,7 +52,7 @@ export const register = async (req, res) => {
         return res.status(500).json({ error: "Error de servidor" });
     }
 }
-
+//listo
 export const login = async (req, res) => {
     const {email, password} = req.body;
     try {
@@ -80,7 +82,7 @@ export const login = async (req, res) => {
         return res.status(500).json({ error: "Error de servidor" });
     }
 }
-
+//listo
 export const infoUser = async (req, res) => {
     try {
         let user = await usuarios.findOne({
@@ -103,7 +105,7 @@ export const infoUser = async (req, res) => {
         return res.status(500).json({error: "error de server"})
     }
 }
-
+//listo
 export const SaveUpdateUser = async (req, res) => {
     const {nombre_usuario, apellido, pais, descripcion} = req.body;
     try {
@@ -136,7 +138,7 @@ export const SaveUpdateUser = async (req, res) => {
         return res.status(500).json({error: "error de server"})
     }
 }
-
+//listo
 export const updatePassword = async (req, res) => {
     const {password_actual, password_nueva} = req.body;
     try {
@@ -171,7 +173,7 @@ export const updatePassword = async (req, res) => {
         return res.status(500).json({error: "error de server"})
     }
 }
-
+//listo
 export const deleteUser = async (req, res) => {
     let id = req.uid
     try {
@@ -215,7 +217,7 @@ export const deleteUser = async (req, res) => {
         return res.status(500).json({error: "error de server"})
     }
 }
-
+//listo
 export const refreshToken = (req, res) => {
     try {
         const { token, expiresIn } = generateToken(req.uid);
@@ -226,7 +228,7 @@ export const refreshToken = (req, res) => {
         return res.status(500).json({ error: "error de server" });
     }
 };
-
+//listo
 export const logout = (req, res) => {
     res.clearCookie("refreshToken");
     res.json({ok: true})

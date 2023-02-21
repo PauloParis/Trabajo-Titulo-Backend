@@ -42,6 +42,7 @@ export const getCycles = async (req, res) => { ///SOCKET IO
 
         return res.json({cycle});
     } catch (error) {
+        console.log(error)
         return res.status(500).json({ error: "error de server" });
     }
 }

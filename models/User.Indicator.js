@@ -44,12 +44,12 @@ indicadores.hasMany(usuario_indicador, {
 })
 usuario_indicador.belongsTo(indicadores)
 
-sequelize.sync()
+/* sequelize.sync()
     .then(() => {
         console.log("La tabla usuario-indicador está sincronizada")
     })
     .catch(err => {
         console.log("La tabla usuario-indicador no está sincronizada")
-    });
+    }); */
 
 export default usuario_indicador;

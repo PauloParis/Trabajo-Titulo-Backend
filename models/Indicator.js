@@ -1,6 +1,7 @@
 import { DataTypes } from "sequelize";
 import sequelize from "../database/connectdb.js"
-import ciclos from "./Cycle.js";
+import tableros from "./Board.js";
+/* import ciclos from "./Cycle.js"; */
 
 const indicadores = sequelize.define('indicadores', {
     ID_Indicador: {
@@ -9,33 +10,30 @@ const indicadores = sequelize.define('indicadores', {
         autoIncrement: true
     },
     Nombre_Indicador: DataTypes.STRING(50),
-    Felicidad_Indicador: {
-        allowNull: true,
-        type: DataTypes.FLOAT(5, 2)
-    },
-    cicloIDCiclo: {
+
+    tableroIDTablero: {
         type: DataTypes.INTEGER,
         references: {
-            model: ciclos,
-            key: "ID_Ciclo"
+            model: tableros,
+            key: "ID_Tablero"
         }
     }
 },{
     timestamps: false
 })
 
-ciclos.hasMany(indicadores, {
-    foreignKey: 'cicloIDCiclo'
+tableros.hasMany(indicadores, {
+    foreignKey: 'tableroIDTablero'
 });
-indicadores.belongsTo(ciclos);
+indicadores.belongsTo(tableros);
 
-sequelize.sync()
+/* sequelize.sync()
     .then(() => {
         console.log("La tabla indicadores está sincronizada")
     })
     .catch(err => {
         console.log("La tabla indicadores no está sincronizada")
-    });
+    }); */
 
 
 export default indicadores;

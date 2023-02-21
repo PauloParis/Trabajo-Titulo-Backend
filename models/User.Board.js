@@ -53,13 +53,13 @@ tableros.hasMany(usuario_tablero, {
 })
 usuario_tablero.belongsTo(tableros)
 
-sequelize.sync()
+/* sequelize.sync()
     .then(() => {
         console.log("La tabla usuario-tablero está sincronizada")
     })
     .catch(err => {
         console.log("La tabla usuario-tablero no está sincronizada")
         console.log(err)
-    });
+    }); */
 
 export default usuario_tablero;

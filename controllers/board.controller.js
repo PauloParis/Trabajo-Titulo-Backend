@@ -284,12 +284,31 @@ export const invitationUser = async (req, res) => {
 
         if (userboardbuscar) throw { code: 11001 };
 
+
+        // creo la tabla usuario_tablero
         let userBoard = await usuario_tablero.create({
             Categoria: 'Invitado',
             usuarioIDUsuario: id_usuario,
             tableroIDTablero: id_tablero
         })
 
+
+        //buscar los indicadores relacionados al tablero
+        let indicadores_del_tablero = await indicadores.findAll({
+            where: {
+                tableroIDTablero: id_tablero
+            }
+        })
+
+         /* creo la tabla usuario_indicador, por cada indicador perteneciente al tablero,
+        en relación al usuario invitado */
+        for(let i=0 ; i<indicadores_del_tablero.length ; i++){
+            await usuario_indicador.create({
+                Evaluacion: null,
+                usuarioIDUsuario: id_usuario,
+                indicadoreIDIndicador: indicadores_del_tablero[i].ID_Indicador
+            })
+        }
         
 
         //buscar datos del usuario para el nav
@@ -308,7 +327,7 @@ export const invitationUser = async (req, res) => {
             }
         })
 
-        return res.status(200).json({userbuscar})
+        return res.status(200).json({indicadores_del_tablero})
 
     } catch (error) {
         if (error.code === 11000) {
