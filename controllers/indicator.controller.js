@@ -72,6 +72,18 @@ export const getIndicator = async (req, res) => { ///SOCKET IO
     let id_tablero = req.params.id 
     try {
         let indicator = await indicadores.findAll({
+            include: [
+                {
+                    model: usuario_indicador,
+                    required: true,
+                    attributes: [
+                        'Evaluacion', 'usuarioIDUsuario', 'indicadoreIDIndicador'
+                    ],
+                    where: {
+                        usuarioIDUsuario: req.uid
+                    }
+                }
+            ],
             where: {
                 tableroIDTablero: id_tablero
             }
@@ -79,6 +91,30 @@ export const getIndicator = async (req, res) => { ///SOCKET IO
          
         return res.status(200).json({indicator});
         
+    } catch (error) {
+        return res.status(500).json({ error: "error de server" });
+    }
+}
+
+export const updateIndicator = async (req, res) => {
+    let id_indicador = req.params.id;
+    const {nombre_indicador} = req.body;
+    try {
+        let indicator = await indicadores.update({
+            Nombre_Indicador: nombre_indicador
+        }, {
+            where: {
+                ID_Indicador: id_indicador
+            }
+        })
+
+        let indicators = await indicadores.findOne({
+            where: {
+                ID_Indicador: id_indicador
+            }
+        })
+
+        return res.status(200).json({indicators})
     } catch (error) {
         return res.status(500).json({ error: "error de server" });
     }
@@ -93,7 +129,6 @@ export const deleteIndicator = async (req, res) => { ///SOCKET IO
                 ID_Indicador: id_indicador
             }
         })
-        console.log("Se borro", id_indicador)
         return res.status(200).json({ok: "El indicador fue eliminado con exito"});
         
     } catch (error) {
@@ -186,7 +221,30 @@ export const saveHappyIndicator = async (req, res) => { ///SOCKET IO
         return res.json({ok: "El indice de Felicidad del indicador es: "+ HappyIndicator + " %"})
 
     } catch (error) {
-        console.log(error)
+        return res.status(500).json({ error: "error de server" });
+    }
+}
+
+export const getEvaluation = async (req, res) => {
+    try {
+        let id_tablero = req.params.id
+        let evaluations = await usuario_indicador.findAll({
+            include: [
+                {
+                    model: indicadores,
+                    required: true,
+                    where: {
+                        tableroIDTablero: id_tablero
+                    }
+                }
+            ],
+            attributes: [
+                'Evaluacion', 'usuarioIDUsuario', 'indicadoreIDIndicador'
+            ]
+        })
+        return res.json({evaluations});
+
+    } catch (error) {
         return res.status(500).json({ error: "error de server" });
     }
 }

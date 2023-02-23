@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { createEvaluation, createIndicator, deleteIndicator, getIndicator, deleteEvaluation } from "../controllers/indicator.controller.js";
+import { createEvaluation, createIndicator, deleteIndicator, getIndicator, deleteEvaluation, updateIndicator, getEvaluation } from "../controllers/indicator.controller.js";
 import { requireToken } from "../middlewares/requireToken.js";
 
 const router = Router(); 
@@ -9,9 +9,11 @@ const router = Router();
 router.post("/createindicador/:id", requireToken, createIndicator);
 router.get("/indicators/:id", requireToken, getIndicator);
 router.delete("/deleteindicator/:id", requireToken, deleteIndicator); 
+router.put('/updateindicator/:id', requireToken, updateIndicator);
 
 
 //CRUD EVALUACIÓN
+router.get("/evaluations/:id", getEvaluation);
 router.post("/evaluation/:id", requireToken, createEvaluation);
 router.delete("/deleteevaluation/:id", requireToken, deleteEvaluation); 
 
