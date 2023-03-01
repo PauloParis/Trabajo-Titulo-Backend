@@ -7,7 +7,7 @@ const router = express.Router();
 router.post("/createboard", requireToken, createBoard);
 router.put("/updateboard/:id", requireToken, updateBoard); 
 router.delete("/deleteboard/:id", requireToken, deleteBoard); 
-router.delete("/disconnectboard/:id", requireToken, disassociateBoard);
+router.delete("/disconnectboard/:idt/:idu", requireToken, disassociateBoard);
 router.get("/getindicatorsdesconnect/:id", requireToken, getIndicadorDissociated);
 
 router.get("/myboards", requireToken ,getMyBoards);

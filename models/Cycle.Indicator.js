@@ -20,6 +20,7 @@ const ciclo_indicador = sequelize.define('ciclo_indicador', {
             key: 'ID_Indicador'
         }
     },
+    
     Felicidad_Indicador: {
         allowNull: true,
         type: DataTypes.FLOAT(5, 2)}
@@ -41,19 +42,19 @@ ciclo_indicador.belongsTo(ciclos)
 
 indicadores.hasMany(ciclo_indicador, {
     foreignKey: {
-        name: 'indicadorIDIndicador'
+        name: 'indicadoreIDIndicador'
     }
 })
 ciclo_indicador.belongsTo(indicadores)
 
 
-sequelize.sync()
+/* sequelize.sync()
     .then(() => {
         console.log("La tabla ciclo_indicador está sincronizada")
     })
     .catch(err => {
         console.log("La tabla ciclo_indicador no está sincronizada")
         console.log(err)
-    });
+    }); */
 
 export default ciclo_indicador;

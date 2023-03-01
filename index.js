@@ -60,6 +60,7 @@ app.use('/api/v1/admin', adminRouter);
 
 
 io.on("connection", (socket) => {
+
     socket.on('joinRoom', ({idUser, room}) => {
         const user = userjoin(socket.id, idUser, room);
         socket.join(user.room);

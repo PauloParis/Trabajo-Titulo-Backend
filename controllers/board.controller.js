@@ -1,6 +1,7 @@
 import sequelize from "../database/connectdb.js";
 import tableros from "../models/Board.js";
 import ciclos from "../models/Cycle.js";
+import evaluaciones from "../models/Evaluation.js";
 import indicadores from "../models/Indicator.js";
 import usuario_tablero from "../models/User.Board.js";
 import usuario_indicador from "../models/User.Indicator.js";
@@ -155,23 +156,39 @@ export const deleteBoard = async (req, res) => {
 }
 
 export const disassociateBoard = async (req, res) => {
-    let id_tablero =  req.params.id
+    let id_tablero =  req.params.idt;
+    let id_usuario = req.params.idu;
     try {
         let board = await usuario_tablero.destroy({
             where: {
-                usuarioIDUsuario: req.uid,
+                usuarioIDUsuario: id_usuario,
                 tableroIDTablero: id_tablero,
-                Categoria: 'Invitado'
+                /* Categoria: 'Invitado' */
             }
         })
 
         let userIndi = await usuario_indicador.destroy({
             where: {
-                usuarioIDUsuario: req.uid
+                usuarioIDUsuario: id_usuario
             }
         })
 
-        return res.json({ok: "Fuiste desvinculado del tablero correctamente"})
+        let userEva = await evaluaciones.destroy({
+            where: {
+                usuarioIDUsuario: id_usuario
+            }
+        })
+
+        if(id_usuario === req.uid) {
+            await tableros.destroy({
+                where: {
+                    id_tablero
+                }
+            })
+        }
+
+
+        return res.json({ok: "Se desvinculó del tablero correctamente"})
     } catch (error) {
         return res.status(500).json({ error: "error de server" });
     }
@@ -264,13 +281,13 @@ export const invitationUser = async (req, res) => {
     const {email} = req.body;
     let id_tablero = req.params.id
     try {
+        // busco al usuario que se pretende invitar
         let user = await usuarios.findOne({
             where: {
                 Email: email
             }
         })
-
-        if (!user) throw { code: 11000 };
+        if (!user) throw { code: 11000 }; // sino existe el usuario
 
         let id_usuario = user.ID_Usuario
 
@@ -281,8 +298,7 @@ export const invitationUser = async (req, res) => {
                 tableroIDTablero: id_tablero
             }
         })
-
-        if (userboardbuscar) throw { code: 11001 };
+        if (userboardbuscar) throw { code: 11001 }; // si ya se invitó
 
 
         // creo la tabla usuario_tablero
@@ -302,12 +318,38 @@ export const invitationUser = async (req, res) => {
 
          /* creo la tabla usuario_indicador, por cada indicador perteneciente al tablero,
         en relación al usuario invitado */
-        for(let i=0 ; i<indicadores_del_tablero.length ; i++){
-            await usuario_indicador.create({
-                Evaluacion: null,
-                usuarioIDUsuario: id_usuario,
-                indicadoreIDIndicador: indicadores_del_tablero[i].ID_Indicador
-            })
+        if(indicadores_del_tablero.length != 0) { // compruebo que hayan indicadores creados
+            for(let i=0 ; i<indicadores_del_tablero.length ; i++){
+                await usuario_indicador.create({
+                    Felicidad_Usuario: null,
+                    usuarioIDUsuario: id_usuario,
+                    indicadoreIDIndicador: indicadores_del_tablero[i].ID_Indicador
+                })
+            }
+        }
+        
+        // buscar los ciclos relacionados al tablero
+        let ciclos_del_tablero = await ciclos.findAll({
+            attributes: [
+                'ID_Ciclo'
+            ],
+            where: {
+                tableroIDTablero: id_tablero
+            }
+        })
+
+        // for ciclos
+        for(let cic=0 ; cic<ciclos_del_tablero.length ; cic++) {
+            // for indicadores
+            for(let ind=0 ; ind<indicadores_del_tablero.length ; ind++) {
+                //creo la tabla Evaluaciones
+                let evaluation = await evaluaciones.create({
+                    evaluaciones: null,
+                    usuarioIDUsuario: id_usuario,
+                    cicloIDCiclo: ciclos_del_tablero[cic].ID_Ciclo,
+                    indicadoreIDIndicador: indicadores_del_tablero[ind].ID_Indicador
+                })
+            }
         }
         
 
@@ -326,6 +368,8 @@ export const invitationUser = async (req, res) => {
                 ID_Usuario: id_usuario
             }
         })
+
+
 
         return res.status(200).json({indicadores_del_tablero})
 

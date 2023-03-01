@@ -25,7 +25,8 @@ const ciclos = sequelize.define('ciclos', {
 })
 
 tableros.hasMany(ciclos, {
-    foreignKey: 'tableroIDTablero'
+    foreignKey: 'tableroIDTablero',
+    onDelete: 'CASCADE'
 });
 ciclos.belongsTo(tableros);
 

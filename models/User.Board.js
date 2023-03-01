@@ -5,10 +5,10 @@ import usuarios from "./User.js";
 
 const usuario_tablero = sequelize.define('usuario_tablero', {
     Categoria: DataTypes.STRING(50),
-    Felicidad_Usuario: {
+/*     Felicidad_Usuario: {
         allowNull: true,
         type: DataTypes.FLOAT(5, 2)
-    },
+    }, */
     usuarioIDUsuario: {
         type: DataTypes.INTEGER,
         allowNull: false,

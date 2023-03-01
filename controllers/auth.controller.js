@@ -91,6 +91,7 @@ export const infoUser = async (req, res) => {
             }
         });
 
+        let id = user.ID_Usuario
         let nombre = user.Nombre_Usuario
         let apellido = user.Apellido
         let pais = user.Pais
@@ -98,7 +99,7 @@ export const infoUser = async (req, res) => {
         let usuario_tipo = user.Tipo_Usuario
         let descripcion = user.Descripcion 
 
-        res.send({nombre, apellido, pais, email, usuario_tipo, descripcion})
+        res.send({id, nombre, apellido, pais, email, usuario_tipo, descripcion})
 
     } catch (error) {
         console.log(error)
