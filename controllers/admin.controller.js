@@ -1,30 +1,36 @@
-import bcryptjs from "bcryptjs";
 import usuarios from "../models/User.js";
 import usuario_indicador from "../models/User.Indicator.js"
-import { generateToken, generateRefreshToken } from "../util/tokenManager.js";
 import indicadores from "../models/Indicator.js";
 import ciclos from "../models/Cycle.js";
 import tableros from "../models/Board.js";
 import usuario_tablero from "../models/User.Board.js"
-import sequelize from "../database/connectdb.js";
-import {Op} from "sequelize";
 import ciclo_indicador from "../models/Cycle.Indicator.js";
+import { Op } from "sequelize";
 
-//no traer el propio
+// traer a todos los usuarios, menos al propio
 export const allUsers = async (req, res) => {
+
     try {
-        let users = await usuarios.findAll();
+        let users = await usuarios.findAll({
+            where: {
+                ID_Usuario: {
+                    [Op.ne]: req.uid
+                }
+                
+            }
+        });
         return res.status(200).json({users})
     } catch (error) {
         return res.status(500).json({error: "error de server"})
     }
 }
 
+// actualizar tipo de usuario administrador-estandar
 export const updateTypeUser = async (req, res) => {
     const {tipo_usuario} = req.body;
     let id = req.params.id;
     try {
-        let user = await usuarios.update({
+        await usuarios.update({
             Tipo_Usuario: tipo_usuario
        }, {
            where: {
@@ -32,13 +38,13 @@ export const updateTypeUser = async (req, res) => {
            }
        });
 
-       let usertype = await usuarios.findOne({
+       let user = await usuarios.findOne({
         where: {
             ID_Usuario: id
         }
        })
 
-       return res.status(200).json({usertype})
+       return res.status(200).json({user})
     } catch (error) {
         return res.status(500).json({error: "error de server"})
     }
@@ -167,6 +173,7 @@ export const getMetric = async (req, res) => {
     }
 }
 
+// traer todos los tableros del usuario
 export const getAllBoard = async (req, res) => {
     try {
         let Boards = await tableros.findAll({
@@ -188,6 +195,7 @@ export const getAllBoard = async (req, res) => {
     }
 }
 
+// traer los usuarios de un tablero en especifico
 export const getUsersBoard = async (req, res) => {
     let id_tablero = req.params.id;
     try {
@@ -209,6 +217,44 @@ export const getUsersBoard = async (req, res) => {
         return res.status(200).json({usersBoard});
     } catch (error) {
         return res.status(500).json({ error: "error de server" });
+    }
+}
+
+// actualizar la categoria del usuario creador-invitado
+export const updateCategory = async (req, res) => {
+    let id_tablero = req.params.idt;
+    let id_usuario = req.params.id;
+    const { categoria } = req.body;
+
+    try {
+        await usuario_tablero.update({
+            Categoria: categoria
+        }, {
+            where: {
+                usuarioIDUsuario: id_usuario,
+                tableroIDTablero: id_tablero
+            }
+        })
+        let userCategory = await usuarios.findOne({
+            include: [
+                {
+                    model: usuario_tablero,
+                    required: true,
+                    where: {
+                        usuarioIDUsuario: id_usuario,
+                        tableroIDTablero: id_tablero
+                    }
+                }
+            ],
+            attributes: [
+                'ID_Usuario', 'Nombre_Usuario', 'Apellido', 'Pais', 'Email', 'Tipo_Usuario', 'Descripcion'
+            ]
+        })
+        
+
+        return res.status(200).json({userCategory})
+    } catch (error) {
+        return res.status(500).json({error: "error de server"})
     }
 }
 

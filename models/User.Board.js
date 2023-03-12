@@ -9,6 +9,7 @@ const usuario_tablero = sequelize.define('usuario_tablero', {
         allowNull: true,
         type: DataTypes.FLOAT(5, 2)
     }, */
+    Notificacion: DataTypes.BOOLEAN(),
     usuarioIDUsuario: {
         type: DataTypes.INTEGER,
         allowNull: false,
