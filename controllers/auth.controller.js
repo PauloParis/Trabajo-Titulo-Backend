@@ -240,6 +240,11 @@ export const refreshToken = async (req, res) => {
 };
 //listo
 export const logout = (req, res) => {
-    res.clearCookie("refreshToken");
-    res.json({ok: true})
+    res.clearCookie("refreshToken", {
+        path: '/',
+        httpOnly: true,
+        secure: true,
+        sameSite: 'none'
+    });
+    res.json({ok: 'logout'})
 }

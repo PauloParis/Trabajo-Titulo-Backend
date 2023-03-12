@@ -11,13 +11,13 @@ export const createCycle = async (req, res) => {
     const {nombre_ciclo} = req.body
     let id_tablero = req.params.id;
     try {
-        // solo se pueden crear 10 ciclos
+        // solo se pueden crear 5 ciclos
         let maxCycle = await ciclos.count({
             where: {
                 tableroIDTablero: id_tablero
             }
         })
-        if(maxCycle>=10) throw { code: 400} // si excede los 10 throw error
+        if(maxCycle>=5) throw { code: 400} // si excede los 5 throw error
 
         // creo el ciclo
         let cycle = await ciclos.create({

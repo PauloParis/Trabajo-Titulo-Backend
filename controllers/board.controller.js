@@ -22,6 +22,16 @@ export const createBoard = async (req, res) => {
 
         if (board) throw { code: 11000 }; // si existe tablero con el mismo nombre
 
+
+        // solo se pueden crear 5 tableros
+        let maxBoard = await usuario_tablero.count({
+            where: {
+                tableroIDTablero: id_tablero,
+                Categoria: 'Creador'
+            }
+        })
+        if(maxBoard>=5) throw { code: 400} // si excede los 5 throw error
+
         // se obtiene el año
         const date = new Date();
         let year = date.getFullYear();
@@ -44,7 +54,7 @@ export const createBoard = async (req, res) => {
         let id_tablero = idboard.ID_Tablero // id-tablero creado
 
         // guardar info en la tabla usuario_Tablero
-        let boardUser = await usuario_tablero.create({
+        await usuario_tablero.create({
             Categoria: 'Creador',
             usuarioIDUsuario: req.uid,
             tableroIDTablero: id_tablero
@@ -64,6 +74,9 @@ export const createBoard = async (req, res) => {
     } catch (error) {
         if (error.code === 11000) {
             return res.status(400).json({ error: "Ya existe un tablero con el mismo nombre" });
+        }
+        if (error.code === 400) {
+            return res.status(400).json({ error: "Solo puede crear un máximo de 5 tableros" });
         }
         return res.status(500).json({ error: "error de server" });
     }
@@ -407,8 +420,17 @@ export const invitationUser = async (req, res) => {
         if (userboardbuscar) throw { code: 11001 }; // si ya se invitó
 
 
+        // solo se pueden invitar 5 usuarios
+        let maxUser = await usuario_tablero.count({
+            where: {
+                tableroIDTablero: id_tablero
+            }
+        })
+        if(maxUser>=5) throw { code: 400} // si excede los 5 throw error
+
+
         // creo la tabla usuario_tablero
-        let userBoard = await usuario_tablero.create({
+        await usuario_tablero.create({
             Categoria: 'Invitado',
             Notificacion: 1,
             usuarioIDUsuario: id_usuario,
@@ -486,6 +508,9 @@ export const invitationUser = async (req, res) => {
         }
         if (error.code === 11001) {
             return res.status(400).json({ error: "Ya se ha envitado a este usuario" });
+        }
+        if (error.code === 400) {
+            return res.status(400).json({ error: "Solo se puede invitar 5 usuarios por tablero" });
         }
         return res.status(500).json({ error: "error de server" });
     }

@@ -14,13 +14,13 @@ export const createIndicator = async (req, res) => {
     const {nombre_indicador} = req.body; 
     let id_tablero = req.params.id;
     try {
-        // Solo se pueden crear 10 indicadores
+        // Solo se pueden crear 5 indicadores
         let maxIndicator = await indicadores.count({ // cuento los indicadores existentes
             where: {
                 tableroIDTablero: id_tablero
             }
         })
-        if(maxIndicator>=10) throw { code: 400} // si excede los 10 throw error
+        if(maxIndicator>=5) throw { code: 400} // si excede los 5 throw error
 
 
         // restricción sino existen el ciclos
@@ -35,7 +35,6 @@ export const createIndicator = async (req, res) => {
         // creo el indicador
         let indicator = await indicadores.create({
             Nombre_Indicador: nombre_indicador,
-            //Felicidad_Indicador: 0,
             tableroIDTablero: id_tablero
         })
 
@@ -103,7 +102,7 @@ export const createIndicator = async (req, res) => {
 
     } catch (error) {
         if (error.code === 400) {
-            return res.status(400).json({ error: "Ya no se puede agregar mas indicadores, máximo 10" });
+            return res.status(400).json({ error: "Solo puede crear 5 indicadores" });
         }
         if (error.code === 401) {
             return res.status(401).json({ error: "Porfavor, crear al menos un Ciclo antes de crear Indicadores" });
