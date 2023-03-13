@@ -6,7 +6,7 @@ const router = Router();
 
 router.post("/createcycle/:id", requireToken, createCycle); 
 router.get("/cycles/:id", requireToken, getCycles); 
-router.delete("/deletecycle/:id", requireToken, deleteCycle)
+router.delete("/deletecycle/:id/:idt", requireToken, deleteCycle)
 router.put("/updatecycle/:id", requireToken, updateCycle);
 
 export default router;

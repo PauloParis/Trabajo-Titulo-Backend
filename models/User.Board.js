@@ -5,10 +5,11 @@ import usuarios from "./User.js";
 
 const usuario_tablero = sequelize.define('usuario_tablero', {
     Categoria: DataTypes.STRING(50),
-    Felicidad_Usuario: {
+/*     Felicidad_Usuario: {
         allowNull: true,
         type: DataTypes.FLOAT(5, 2)
-    },
+    }, */
+    Notificacion: DataTypes.BOOLEAN(),
     usuarioIDUsuario: {
         type: DataTypes.INTEGER,
         allowNull: false,
@@ -53,13 +54,13 @@ tableros.hasMany(usuario_tablero, {
 })
 usuario_tablero.belongsTo(tableros)
 
-/* sequelize.sync()
+sequelize.sync()
     .then(() => {
         console.log("La tabla usuario-tablero está sincronizada")
     })
     .catch(err => {
         console.log("La tabla usuario-tablero no está sincronizada")
         console.log(err)
-    }); */
+    });
 
 export default usuario_tablero;

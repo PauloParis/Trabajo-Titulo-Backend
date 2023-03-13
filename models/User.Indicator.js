@@ -4,10 +4,11 @@ import indicadores from "./Indicator.js";
 import usuarios from "./User.js";
 
 const usuario_indicador = sequelize.define('usuario_indicador', {
-    Evaluacion: {
+    
+    Felicidad_Usuario: {
         allowNull: true,
-        type: DataTypes.INTEGER
-    },
+        type: DataTypes.FLOAT(5, 2)
+    }, 
     usuarioIDUsuario: {
         type: DataTypes.INTEGER,
         allowNull: false,
@@ -44,12 +45,12 @@ indicadores.hasMany(usuario_indicador, {
 })
 usuario_indicador.belongsTo(indicadores)
 
-/* sequelize.sync()
+sequelize.sync()
     .then(() => {
         console.log("La tabla usuario-indicador está sincronizada")
     })
     .catch(err => {
         console.log("La tabla usuario-indicador no está sincronizada")
-    }); */
+    });
 
 export default usuario_indicador;

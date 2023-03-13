@@ -20,6 +20,7 @@ const ciclo_indicador = sequelize.define('ciclo_indicador', {
             key: 'ID_Indicador'
         }
     },
+    
     Felicidad_Indicador: {
         allowNull: true,
         type: DataTypes.FLOAT(5, 2)}
@@ -41,7 +42,7 @@ ciclo_indicador.belongsTo(ciclos)
 
 indicadores.hasMany(ciclo_indicador, {
     foreignKey: {
-        name: 'indicadorIDIndicador'
+        name: 'indicadoreIDIndicador'
     }
 })
 ciclo_indicador.belongsTo(indicadores)

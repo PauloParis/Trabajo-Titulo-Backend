@@ -25,16 +25,17 @@ const ciclos = sequelize.define('ciclos', {
 })
 
 tableros.hasMany(ciclos, {
-    foreignKey: 'tableroIDTablero'
+    foreignKey: 'tableroIDTablero',
+    onDelete: 'CASCADE'
 });
 ciclos.belongsTo(tableros);
 
-/* sequelize.sync()
+sequelize.sync()
     .then(() => {
         console.log("La tabla ciclos está sincronizada")
     })
     .catch(err => {
         console.log("La tabla ciclos no está sincronizada")
-    }); */
+    });
 
 export default ciclos;

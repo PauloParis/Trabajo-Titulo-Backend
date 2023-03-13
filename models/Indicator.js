@@ -23,17 +23,18 @@ const indicadores = sequelize.define('indicadores', {
 })
 
 tableros.hasMany(indicadores, {
-    foreignKey: 'tableroIDTablero'
+    foreignKey: 'tableroIDTablero',
+    onDelete: 'CASCADE'
 });
 indicadores.belongsTo(tableros);
 
-/* sequelize.sync()
+sequelize.sync()
     .then(() => {
         console.log("La tabla indicadores está sincronizada")
     })
     .catch(err => {
         console.log("La tabla indicadores no está sincronizada")
-    }); */
+    });
 
 
 export default indicadores;
