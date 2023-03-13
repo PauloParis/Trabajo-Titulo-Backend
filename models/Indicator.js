@@ -28,13 +28,13 @@ tableros.hasMany(indicadores, {
 });
 indicadores.belongsTo(tableros);
 
-/* sequelize.sync()
+sequelize.sync()
     .then(() => {
         console.log("La tabla indicadores está sincronizada")
     })
     .catch(err => {
         console.log("La tabla indicadores no está sincronizada")
-    }); */
+    });
 
 
 export default indicadores;

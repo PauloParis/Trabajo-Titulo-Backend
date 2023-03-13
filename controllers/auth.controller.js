@@ -24,7 +24,7 @@ export const register = async (req, res) => {
         });
         if (user) throw { code: 11000 }; // throw error si existe
 
-        if (email == 'vescobar@utem.cl') {
+        if (email == 'admin@test.cl') {
             tipo_usuario = 'Administrador'
         }
 

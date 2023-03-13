@@ -48,13 +48,13 @@ indicadores.hasMany(ciclo_indicador, {
 ciclo_indicador.belongsTo(indicadores)
 
 
-/* sequelize.sync()
+sequelize.sync()
     .then(() => {
         console.log("La tabla ciclo_indicador está sincronizada")
     })
     .catch(err => {
         console.log("La tabla ciclo_indicador no está sincronizada")
         console.log(err)
-    }); */
+    });
 
 export default ciclo_indicador;

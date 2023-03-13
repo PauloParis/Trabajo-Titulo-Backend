@@ -63,4 +63,12 @@ indicadores.hasMany(evaluaciones, {
 evaluaciones.belongsTo(indicadores);
 
 
+sequelize.sync()
+    .then(() => {
+        console.log("La tabla evaluaciones está sincronizada")
+    })
+    .catch(err => {
+        console.log("La tabla evaluaciones no está sincronizada")
+    });
+
 export default evaluaciones;

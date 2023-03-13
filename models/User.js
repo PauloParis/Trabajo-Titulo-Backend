@@ -29,14 +29,14 @@ usuarios.prototype.comparePassword = async (canditatePassword, password) => {
     return await bcryptjs.compare(canditatePassword, password);
 }
 
-/* sequelize.sync()
+sequelize.sync()
     .then(() => {
         console.log("La tabla Usuarios está sincronizada")
     })
     .catch(err => {
         console.log("La tabla usuarios no está sincronizada")
         console.log(err)
-    }); */
+    });
 
 
 export default usuarios

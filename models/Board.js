@@ -25,12 +25,12 @@ const tableros = sequelize.define('tableros', {
     timestamps: false
 })
 
-/* sequelize.sync()
+sequelize.sync()
     .then(() => {
         console.log("La tabla tableros está sincronizada")
     })
     .catch(err => {
         console.log("La tabla tableros no está sincronizada")
-    }); */
+    });
 
 export default tableros;

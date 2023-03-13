@@ -155,4 +155,4 @@ io.on("connection", (socket) => {
 export {io};
 
 const PORT = process.env.PORT || 3000
-server.listen(3000, ()=> console.log('servidor andando')); 
+server.listen(PORT, ()=> console.log('servidor andando', PORT)); 
