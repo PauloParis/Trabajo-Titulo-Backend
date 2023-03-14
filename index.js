@@ -1,7 +1,6 @@
 import express from "express";
 import "dotenv/config"
 import cookieParser from "cookie-parser"
-import cors from "cors"
 import { Server } from "socket.io";
 import http from "http"
 import { Router } from "express";
@@ -29,7 +28,7 @@ const server = http.createServer(app)
 const io = new Server(server, {
     //transports: ['polling'],
     cors: {
-        origin: "http://localhost:9000",
+        origin: process.env.ORIGIN1,
         methods: ["GET", "POST"]
     },
 })
