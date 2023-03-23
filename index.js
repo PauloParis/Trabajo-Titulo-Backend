@@ -23,7 +23,7 @@ const server = http.createServer(app)
 
 //configuración socket para cors
 const io = new Server(server, {
-    //transports: ['polling'],
+    transports: ['polling'],
     cors: {
         origin: process.env.ORIGIN1,
         methods: ["GET", "POST"]
