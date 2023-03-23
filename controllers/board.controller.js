@@ -26,7 +26,7 @@ export const createBoard = async (req, res) => {
         // solo se pueden crear 5 tableros
         let maxBoard = await usuario_tablero.count({
             where: {
-                tableroIDTablero: id_tablero,
+                usuarioIDUsuario: req.uid,
                 Categoria: 'Creador'
             }
         })

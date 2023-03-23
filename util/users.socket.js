@@ -2,9 +2,9 @@
 const users = [];
 
 // unir usuarios al chat
-export const userJoin = (id, username, room, infoUser) => {
-    const user = { id, username, room, infoUser };
-    const key = users.some((item) => item.username === username)
+export const userJoin = (id, idUser, room, infoUser) => {
+    const user = { id, idUser, room, infoUser };
+    const key = users.some((item) => item.idUser === idUser)
     if(!key) {
         users.push(user);
         return user
@@ -19,13 +19,13 @@ export const getCurrentUser = (id) => {
 // se filtra al usuario que se desconecta del chat
 export const userLeave = (id) => {
     const index = users.findIndex(user => user.id === id);
-    if(index !== -1) return users.splice(index, 1)[0];
+    if(index !== -1) return users.splice(index, 1)
 }
 
 export const userLeaveRoom = (idUser, room) => {
-    const index = users.findIndex(user => (user.username === idUser && user.room === room));
-    if(index !== -1) {
-        users.splice(index, 1)[0]
+    const index = users.findIndex(user => (user.idUser === idUser && user.room === room));
+    if(index !== -1) { // sino encuentra nada devuelve -1
+        users.splice(index, 1)
         return users;
     }
 }

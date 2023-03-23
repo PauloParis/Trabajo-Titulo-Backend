@@ -3,7 +3,6 @@ import "dotenv/config"
 import cookieParser from "cookie-parser"
 import { Server } from "socket.io";
 import http from "http"
-import { Router } from "express";
 
 //importar Base de datos
 import "./database/connectdb.js"
@@ -18,10 +17,8 @@ import { corsConfiguration } from "./util/corsConfiguration.js";
 
 //Importar util de socket
 import {getCurrentUser, getRoomUsers, userJoin, userLeave, userLeaveRoom} from "./util/users.socket.js"
-import { formatMessage } from "./util/messages.js";
 
 const app  = express()
-const router = Router();
 const server = http.createServer(app)
 
 //configuración socket para cors
@@ -48,7 +45,6 @@ app.use('/api/v1/cycle', cycleRouter);
 app.use('/api/v1/indicator', indicatorRouter);
 app.use('/api/v1/admin', adminRouter);
 
-const botName = 'Room Chat BOT'
 
 io.on("connection", (socket) => {
 
@@ -56,9 +52,6 @@ io.on("connection", (socket) => {
         const user = userJoin(socket.id, idUser, room, infoUser) //pujo al usuario al array de usuarios de la sala especifica
 
             socket.join(user.room); //uno al usuario a la sala
-            socket.emit('message', formatMessage(botName, 'Bienvenido(a) a Room Chat'));
-
-            socket.broadcast.to(user.room).emit('message', formatMessage(botName, `${user.username} se ha unido al chat`)) // to(user.room), envia el mensaje en la sala correcta
 
             // send users and room info
             io.to(user.room).emit('roomUsers', {
@@ -66,7 +59,7 @@ io.on("connection", (socket) => {
                 users: getRoomUsers(user.room)
             })
 
-        //salirse del room
+    //salirse del room
     socket.on('leaveRoom', ({idUser, room}) => {
         const user = userLeaveRoom(idUser, room);
         
@@ -80,15 +73,6 @@ io.on("connection", (socket) => {
         
     })
 
-    })
-
-
-    
-
-    // listen fot charMessage
-    socket.on('chatMessage', (msg) => {
-        const user = getCurrentUser(socket.id);
-        io.to(user.room).emit('message', formatMessage(user.username, msg))
     })
 
 
@@ -138,9 +122,6 @@ io.on("connection", (socket) => {
     socket.on('disconnect', () => {
         const user = userLeave(socket.id);
         if(user) {
-            io.to(user.room).emit('message', formatMessage(botName, `${user.username} a dejado el chat`))
-
-            // send users and room info
             io.to(user.room).emit('roomUsers', {
                 room: user.room,
                 users: getRoomUsers(user.room)
